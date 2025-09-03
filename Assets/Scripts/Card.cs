@@ -5,14 +5,35 @@ using UnityEngine.UI;
 
 public class Card : MonoBehaviour
 {
-    [SerializeField] Image card;
-    [SerializeField] Sprite a;
-    [SerializeField] Sprite b;
+    public int cardValue;
 
-    public void OnMouseDown()
+    public CardManager cardManager;
+
+    private bool isFaceUp = false;
+    public Image cardImage;
+
+    private void Start()
     {
-        card.sprite = card.sprite == a ? b : a; 
+        isFaceUp = false;
+        cardImage.sprite = cardManager.cardBack;
     }
-    
+
+    public void FlipCard()
+    {
+        if (!isFaceUp)
+        {
+            isFaceUp = true;
+            cardImage.sprite = cardManager.cardFaces[cardValue];
+            Debug.Log("Card flipped! Value: " + cardValue);
+
+        }
+    }
+
+    public void HideCard()
+    {
+        isFaceUp = false;
+        cardImage.sprite = cardManager.cardBack;
+        Debug.Log("Card hidden.");
+    }
 }
  
