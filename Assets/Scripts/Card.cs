@@ -25,6 +25,10 @@ public class Card : MonoBehaviour
     {
         float duration = 0.2f;
 
+        // Play flip sound
+        if (showFace)
+            AudioManager.Instance?.PlayFlip();
+
         for (float t = 0; t < 1f; t += Time.deltaTime / duration)
         {
             transform.localScale = new Vector3(Mathf.Lerp(1f, 0f, t), 1f, 1f);
@@ -43,6 +47,7 @@ public class Card : MonoBehaviour
         if (isFaceUp && showFace)
             cardManager.CardFlipped(this);
     }
+
 
     public IEnumerator FlipCardInstantly(bool showFace)
     {

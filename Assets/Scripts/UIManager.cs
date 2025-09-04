@@ -95,10 +95,11 @@ public class UIManager : MonoBehaviour
 
     public void OnNewGameClicked()
     {
-        // TODO: SaveSystem.Clear(); if implementing a SaveSystem
         HideWinImmediate();
-        if (ScoreManager.instance != null) ScoreManager.instance.ResetScore();
+        ScoreManager.instance?.ResetScore();
         CardManager.instance?.RestartGame();
+        SaveSystem.ClearSave();
+        AudioManager.Instance?.PlayNewGame();
     }
 
     public void OnDifficultyChanged(int index)
@@ -107,19 +108,16 @@ public class UIManager : MonoBehaviour
         CardManager.instance?.SetDifficulty(index);
     }
 
-    public void OnMuteToggled(bool isMuted)
-    {
-        // TODO: AudioManager.Instance?.SetMuted(isMuted);
-        // Optionally persist in SaveSystem
-    }
     public void OnSaveClicked()
     {
         SaveSystem.SaveGame();
+        AudioManager.Instance?.PlaySave();
     }
 
     public void OnLoadClicked()
     {
         SaveSystem.LoadGame();
+        AudioManager.Instance?.PlayLoad();
     }
-
+   
 }

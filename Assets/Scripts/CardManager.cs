@@ -166,27 +166,33 @@ public class CardManager : MonoBehaviour
     {
         if (firstCard.cardValue == secondCard.cardValue)
         {
+            AudioManager.Instance?.PlayMatch();
+
             matchedPairs++;
             ScoreManager.instance.AddMatchPoints();
             UIManager.Instance?.UpdatePairs(matchedPairs, totalPairs);
+
             firstCard.DisableCard();
             secondCard.DisableCard();
+
             firstCard = null;
             secondCard = null;
 
             if (matchedPairs >= totalPairs)
             {
+                AudioManager.Instance?.PlayGameOver();
                 UIManager.Instance?.ShowWin(ScoreManager.instance.GetScore());
                 SaveSystem.ClearSave();
             }
-
         }
         else
         {
+            AudioManager.Instance?.PlayMismatch();
             ScoreManager.instance.AddMismatchPenalty();
             StartCoroutine(UnflipCards());
         }
     }
+
 
     IEnumerator UnflipCards()
     {
