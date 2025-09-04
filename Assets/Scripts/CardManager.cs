@@ -1,10 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Media;
 using UnityEngine;
 using UnityEngine.UI;
 
-public enum Difficulty { Easy, Medium, Hard , Insane}
+public enum Difficulty { Easy, Medium, Hard, Insane }
 
 public class CardManager : MonoBehaviour
 {
@@ -18,67 +17,80 @@ public class CardManager : MonoBehaviour
     public Difficulty currentDifficulty = Difficulty.Easy;
 
     private List<Card> cards;
-    private List<int> cardValues;
-    public Card firstCard, secondCard;
+    public List<Card> Cards => cards;
 
+    private List<int> cardValues;
+
+    public Card firstCard, secondCard;
     private int rows, cols;
 
     private int matchedPairs;
+    public int MatchedPairs { get => matchedPairs; set => matchedPairs = value; }
     private int totalPairs;
+    public int TotalPairs { get => totalPairs; set => totalPairs = value; }
+
+    [HideInInspector]
+    public bool isLoading = false;
 
     private void Awake()
     {
         if (instance == null) instance = this;
-        else if (instance != this) Destroy(gameObject);
+        else Destroy(gameObject);
     }
 
-    void Start()
-    {
-        SetupLayout();
-        CreateCards();
-        ShuffleCards();
-        StartCoroutine(PreviewCards(.5f));
+    void Start() => RestartGame();
 
-        Debug.Log(currentDifficulty);
+    public void SetDifficulty(int index)
+    {
+        currentDifficulty = (Difficulty)index;
+        RestartGame();
+    }
+
+    public void RestartGame(bool showPreview = true)
+    {
+        if (!isLoading)
+        {
+            foreach (Transform child in cardHolder)
+                Destroy(child.gameObject);
+        }
+
+        firstCard = null;
+        secondCard = null;
+        matchedPairs = 0;
+
+        if (!isLoading)
+        {
+            SetupLayout();
+            CreateCards();
+            ShuffleCards();
+        }
+
+        UIManager.Instance?.UpdatePairs(matchedPairs, totalPairs);
+        UIManager.Instance?.UpdateScore(ScoreManager.instance?.GetScore() ?? 0,
+                                        ScoreManager.instance?.GetCombo() ?? 0);
+        UIManager.Instance?.HideWinImmediate();
+
+        if (showPreview && !isLoading)
+            StartCoroutine(PreviewCards(.5f));
     }
 
     void SetupLayout()
     {
         switch (currentDifficulty)
         {
-            case Difficulty.Easy:
-                rows = 3; cols = 2;
-                break;
-            case Difficulty.Medium:
-                rows = 4; cols = 3;
-                break;
-            case Difficulty.Hard:
-                rows = 5; cols = 4;
-                break;
-            case Difficulty.Insane:
-                rows = 5; cols = 6;
-                break;
+            case Difficulty.Easy: rows = 3; cols = 2; break;
+            case Difficulty.Medium: rows = 4; cols = 3; break;
+            case Difficulty.Hard: rows = 5; cols = 4; break;
+            case Difficulty.Insane: rows = 5; cols = 6; break;
         }
 
-        // Adjust GridLayoutGroup
         GridLayoutGroup grid = cardHolder.GetComponent<GridLayoutGroup>();
         if (grid != null)
         {
             grid.constraint = GridLayoutGroup.Constraint.FixedColumnCount;
             grid.constraintCount = cols;
-
-            // auto-size cell depending on holder
-            float cellWidth = (cardHolder.GetComponent<RectTransform>().rect.width - grid.spacing.x * (cols - 1)) / cols;
-            float cellHeight = (cardHolder.GetComponent<RectTransform>().rect.height - grid.spacing.y * (rows - 1)) / rows;
-            /*grid.cellSize = new Vector2(cellWidth, cellHeight);*/
         }
     }
-    public void SetDifficulty(int difficultyIndex)
-    {
-        currentDifficulty = (Difficulty)difficultyIndex;
-        RestartGame();
-    }
-
 
     void CreateCards()
     {
@@ -87,14 +99,10 @@ public class CardManager : MonoBehaviour
 
         int totalCards = rows * cols;
         totalPairs = totalCards / 2;
-        matchedPairs = 0; // reset at start
-        UIManager.Instance?.UpdatePairs(matchedPairs, totalPairs);
-        // pick random unique card IDs
-        List<int> availableFaces = new List<int>();
-        for (int i = 0; i < cardFaces.Length; i++)
-            availableFaces.Add(i);
 
-        // shuffle available faces
+        List<int> availableFaces = new List<int>();
+        for (int i = 0; i < cardFaces.Length; i++) availableFaces.Add(i);
+
         for (int i = 0; i < availableFaces.Count; i++)
         {
             int randomIndex = Random.Range(i, availableFaces.Count);
@@ -103,14 +111,12 @@ public class CardManager : MonoBehaviour
             availableFaces[randomIndex] = temp;
         }
 
-        // take only the required number of pairs
         for (int i = 0; i < totalPairs; i++)
         {
             cardValues.Add(availableFaces[i]);
             cardValues.Add(availableFaces[i]);
         }
 
-        // now instantiate cards
         foreach (int id in cardValues)
         {
             Card newCard = Instantiate(cardPrefab, cardHolder);
@@ -118,28 +124,7 @@ public class CardManager : MonoBehaviour
             newCard.cardValue = id;
             cards.Add(newCard);
         }
-       
     }
-
-    IEnumerator PreviewCards(float delay)
-    {
-        // Step 1: Show all cards
-        foreach (Card card in cards)
-            card.ForceShow();
-
-        yield return null; // allow Unity to render one frame
-
-        // Step 2: Wait for preview duration
-        yield return new WaitForSeconds(delay);
-
-        // Step 3: Now hide all cards
-        foreach (Card card in cards)
-            card.ForceHide();
-    }
-
-
-
-
 
     void ShuffleCards()
     {
@@ -150,18 +135,26 @@ public class CardManager : MonoBehaviour
             cardValues[i] = cardValues[randomIndex];
             cardValues[randomIndex] = temp;
         }
+
         for (int i = 0; i < cards.Count; i++)
-        {
             cards[i].cardValue = cardValues[i];
-        }
+    }
+
+    IEnumerator PreviewCards(float delay)
+    {
+        foreach (Card card in cards)
+            card.ForceShow();
+
+        yield return null;
+        yield return new WaitForSeconds(delay);
+
+        foreach (Card card in cards)
+            card.ForceHide();
     }
 
     public void CardFlipped(Card flippedCard)
     {
-        if (firstCard == null)
-        {
-            firstCard = flippedCard;
-        }
+        if (firstCard == null) firstCard = flippedCard;
         else if (secondCard == null && flippedCard != firstCard)
         {
             secondCard = flippedCard;
@@ -173,26 +166,23 @@ public class CardManager : MonoBehaviour
     {
         if (firstCard.cardValue == secondCard.cardValue)
         {
-            
-            Debug.Log("Match Found!");
             matchedPairs++;
             ScoreManager.instance.AddMatchPoints();
             UIManager.Instance?.UpdatePairs(matchedPairs, totalPairs);
             firstCard.DisableCard();
             secondCard.DisableCard();
-
-            // Check for win
-            if (matchedPairs >= totalPairs)
-            {
-                OnWin();
-            }
-
             firstCard = null;
             secondCard = null;
+
+            if (matchedPairs >= totalPairs)
+            {
+                UIManager.Instance?.ShowWin(ScoreManager.instance.GetScore());
+                SaveSystem.ClearSave();
+            }
+
         }
         else
         {
-            Debug.Log("No Match.");
             ScoreManager.instance.AddMismatchPenalty();
             StartCoroutine(UnflipCards());
         }
@@ -206,41 +196,4 @@ public class CardManager : MonoBehaviour
         firstCard = null;
         secondCard = null;
     }
-
-    public void RestartGame()
-    {
-        // Destroy old cards
-        foreach (Transform child in cardHolder)
-            Destroy(child.gameObject);
-
-        // Reset state
-        firstCard = null;
-        secondCard = null;
-
-        // Re-setup
-        SetupLayout();
-        CreateCards();
-        ShuffleCards();
-        UIManager.Instance?.UpdatePairs(0, totalPairs);
-        UIManager.Instance?.UpdateScore(ScoreManager.instance?.GetScore() ?? 0,
-                                        ScoreManager.instance?.GetCombo() ?? 0);
-        UIManager.Instance?.HideWinImmediate();
-        StartCoroutine(PreviewCards(.5f));
-    }
-  
-
-    IEnumerator RestartAfterDelay(float delay)
-    {
-        yield return new WaitForSeconds(delay);
-        RestartGame();
-    }
-
-    void OnWin()
-    {
-        Debug.Log("🎉 You Win!");
-       // StartCoroutine(RestartAfterDelay(2f));
-       UIManager.Instance?.ShowWin(ScoreManager.instance?.GetScore() ?? 0);
-        // TODO: show win UI, play sound, restart menu, etc.
-    }
 }
-

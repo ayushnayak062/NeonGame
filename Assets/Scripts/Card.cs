@@ -1,96 +1,74 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class Card : MonoBehaviour
 {
     public int cardValue;
-
     public CardManager cardManager;
-
-    private bool isFaceUp = false;
     public Image cardImage;
     public Button cardButton;
-    private void Start()
-    {
-        //isFaceUp = false;
-        //cardImage.sprite = cardManager.cardBack;
-    }
+
+    private bool isFaceUp = false;
+    public bool IsFaceUp => isFaceUp;
+    public bool IsMatched => !cardButton.interactable;
 
     public void FlipCard()
     {
-        if (!isFaceUp && cardManager.firstCard == null || cardManager.secondCard == null)
-        {
-            /*isFaceUp = true;
-            cardImage.sprite = cardManager.cardFaces[cardValue];
-            cardManager.CardFlipped(this);
-            Debug.Log("Card flipped! Value: " + cardValue);*/
+        if (!isFaceUp && (cardManager.firstCard == null || cardManager.secondCard == null))
             StartCoroutine(FlipAnimation(true));
-
-        }
     }
 
-    public void HideCard()
-    {
-        /* isFaceUp = false;
-         cardImage.sprite = cardManager.cardBack;
-         Debug.Log("Card hidden.");*/
-        StartCoroutine(FlipAnimation(false));
-    }
+    public void HideCard() => StartCoroutine(FlipAnimation(false));
 
     private IEnumerator FlipAnimation(bool showFace)
     {
-        // Shrink X to 0
-        float duration = 0.2f; // speed (smaller = faster)
+        float duration = 0.2f;
+
         for (float t = 0; t < 1f; t += Time.deltaTime / duration)
         {
-            float scaleX = Mathf.Lerp(1f, 0f, t);
-            transform.localScale = new Vector3(scaleX, 1f, 1f);
+            transform.localScale = new Vector3(Mathf.Lerp(1f, 0f, t), 1f, 1f);
             yield return null;
         }
 
-        // Switch sprite
         isFaceUp = showFace;
         cardImage.sprite = isFaceUp ? cardManager.cardFaces[cardValue] : cardManager.cardBack;
 
-        // Expand back to 1
         for (float t = 0; t < 1f; t += Time.deltaTime / duration)
         {
-            float scaleX = Mathf.Lerp(0f, 1f, t);
-            transform.localScale = new Vector3(scaleX, 1f, 1f);
+            transform.localScale = new Vector3(Mathf.Lerp(0f, 1f, t), 1f, 1f);
             yield return null;
         }
 
-        // Notify manager only when showing face
         if (isFaceUp && showFace)
-        {
             cardManager.CardFlipped(this);
-            Debug.Log("Card flipped! Value: " + cardValue);
-        }
-    }
-    public void ForceShow()
-    {
-        isFaceUp = true;
-        cardImage.sprite = cardManager.cardFaces[cardValue];
     }
 
-    public void ForceHide()
+    public IEnumerator FlipCardInstantly(bool showFace)
     {
-       /* isFaceUp = false;
-        cardImage.sprite = cardManager.cardBack;*/
-       StartCoroutine(FlipAnimation(false));
+        float duration = 0.15f;
+        for (float t = 0; t < 1f; t += Time.deltaTime / duration)
+        {
+            transform.localScale = new Vector3(Mathf.Lerp(1f, 0f, t), 1f, 1f);
+            yield return null;
+        }
+
+        isFaceUp = showFace;
+        cardImage.sprite = isFaceUp ? cardManager.cardFaces[cardValue] : cardManager.cardBack;
+
+        for (float t = 0; t < 1f; t += Time.deltaTime / duration)
+        {
+            transform.localScale = new Vector3(Mathf.Lerp(0f, 1f, t), 1f, 1f);
+            yield return null;
+        }
     }
+
+    public void ForceShow() => cardImage.sprite = cardManager.cardFaces[cardValue];
+    public void ForceHide() => cardImage.sprite = cardManager.cardBack;
     public void DisableCard()
     {
         cardButton.interactable = false;
-        if (cardImage != null)
-            cardImage.color = new Color(0.5f, 0.5f, 0.5f, 1f);// lock card
+        cardImage.color = new Color(0.5f, 0.5f, 0.5f, 1f);
     }
-
-    public void EnableCard()
-    {
-        cardButton.interactable = true; // optional if you ever reset a card
-    }
-
+    public void EnableCard() => cardButton.interactable = true;
 }
