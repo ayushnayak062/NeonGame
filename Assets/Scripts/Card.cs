@@ -20,10 +20,11 @@ public class Card : MonoBehaviour
 
     public void FlipCard()
     {
-        if (!isFaceUp)
+        if (!isFaceUp && cardManager.firstCard == null || cardManager.secondCard == null)
         {
             isFaceUp = true;
             cardImage.sprite = cardManager.cardFaces[cardValue];
+            cardManager.CardFlipped(this);
             Debug.Log("Card flipped! Value: " + cardValue);
 
         }

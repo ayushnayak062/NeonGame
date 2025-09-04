@@ -33,22 +33,75 @@ public class CardManager : MonoBehaviour
         cards = new List<Card>();
         cardValues = new List<int>();
         CreateCards();
+        ShuffleCards();
     }
 
     void CreateCards()
     {
-        for (int i = 0; i < cardFaces.Length/2; i++)
+        for (int i = 0; i < cardFaces.Length / 2; i++)
         {
             cardValues.Add(i);
             cardValues.Add(i);
         }
-        foreach(int id in cardValues)
+        foreach (int id in cardValues)
         {
             Card newCard = Instantiate(cardPrefab, cardHolder);
             newCard.cardManager = this;
             newCard.cardValue = id;
             cards.Add(newCard);
         }
+    }
+
+    void ShuffleCards()
+    {
+        for (int i = 0; i < cardValues.Count; i++)
+        {
+            int randomIndex = Random.Range(i, cardValues.Count);
+            int temp = cardValues[i];
+            cardValues[i] = cardValues[randomIndex];
+            cardValues[randomIndex] = temp;
+        }
+        for (int i = 0; i < cards.Count; i++)
+        {
+            cards[i].cardValue = cardValues[i];
+        }
+    }
+
+    public void CardFlipped(Card flippedCard)
+    {
+        if (firstCard == null)
+        {
+            firstCard = flippedCard;
+        }
+        else if (secondCard == null && flippedCard != firstCard)
+        {
+            secondCard = flippedCard;
+            CheckMatching();
+        }
+    }
+
+    void CheckMatching()
+    {
+        if (firstCard.cardValue == secondCard.cardValue)
+        {
+            Debug.Log("Match Found!");
+            firstCard = null;
+            secondCard = null;
+        }
+        else
+        {
+            Debug.Log("No Match.");
+            StartCoroutine(UnflipCards());
+        }
+    }
+
+    IEnumerator UnflipCards()
+    {
+        yield return new WaitForSeconds(1f);
+        firstCard.HideCard();
+        secondCard.HideCard();
+        firstCard = null;
+        secondCard = null;
     }
 }
 

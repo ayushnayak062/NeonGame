@@ -184,8 +184,8 @@ MonoBehaviour:
   m_StartAxis: 0
   m_CellSize: {x: 100, y: 100}
   m_Spacing: {x: 15, y: 15}
-  m_Constraint: 0
-  m_ConstraintCount: 2
+  m_Constraint: 1
+  m_ConstraintCount: 5
 --- !u!114 &197041688
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -199,7 +199,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 0.028301895, g: 0.0006674974, b: 0.0006674974, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -510,10 +510,15 @@ MonoBehaviour:
   cardBack: {fileID: 21300000, guid: 9bda233a33c722a4d99003bc0c43b4b7, type: 3}
   cardFaces:
   - {fileID: 21300000, guid: 22774d5311e9ef740ab8ea5a89379962, type: 3}
-  - {fileID: 21300000, guid: 7f9b438025364b045bc703705541efca, type: 3}
-  - {fileID: 21300000, guid: ddb95366fab69e94e87727e09d5fd17a, type: 3}
-  - {fileID: 21300000, guid: 53a43a1642961314f95460d40467a695, type: 3}
-  - {fileID: 21300000, guid: afb2eaf7cb19e7f4d814a743253d503d, type: 3}
+  - {fileID: 21300000, guid: 992b20a8281df7749b34ecc0825123fd, type: 3}
+  - {fileID: 21300000, guid: 805537feca523c64ba10b469bd3f75ad, type: 3}
+  - {fileID: 21300000, guid: ab2d894dc6be4fa4aa4a6cc64ff067b7, type: 3}
+  - {fileID: 21300000, guid: 6a8a8d9397f4a5e4ea873a65b84a5c15, type: 3}
+  - {fileID: 21300000, guid: 5126426454d016c41aace55c2a52a1e1, type: 3}
+  - {fileID: 21300000, guid: 175f5dbfe1568f64a8b509e7ec2a1a57, type: 3}
+  - {fileID: 21300000, guid: ea90acd8d1a42a94687a2b82380806ea, type: 3}
+  - {fileID: 21300000, guid: 44c2f5d4c932bbc42b13574bc89d9665, type: 3}
+  - {fileID: 21300000, guid: c89165c91995207489989c57c7a7dd7a, type: 3}
   firstCard: {fileID: 0}
   secondCard: {fileID: 0}
   cardHolder: {fileID: 197041686}
