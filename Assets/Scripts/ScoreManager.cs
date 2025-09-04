@@ -32,7 +32,7 @@ public class ScoreManager : MonoBehaviour
         score = Mathf.Max(score, 0);
 
         Debug.Log($"Match! +{pointsToAdd} points (Combo x{comboStreak}) | Score: {score}");
-        // later: notify UIManager
+        UIManager.Instance.UpdateScore(score, comboStreak);
     }
 
     public void AddMismatchPenalty()
@@ -44,7 +44,7 @@ public class ScoreManager : MonoBehaviour
         score = Mathf.Max(score, 0);
 
         Debug.Log($"Mismatch! {mismatchPenalty} points | Score: {score}");
-        // later: notify UIManager
+        UIManager.Instance.UpdateScore(score, comboStreak);
     }
 
     public void ResetScore()

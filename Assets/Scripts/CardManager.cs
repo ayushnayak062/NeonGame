@@ -88,7 +88,7 @@ public class CardManager : MonoBehaviour
         int totalCards = rows * cols;
         totalPairs = totalCards / 2;
         matchedPairs = 0; // reset at start
-
+        UIManager.Instance?.UpdatePairs(matchedPairs, totalPairs);
         // pick random unique card IDs
         List<int> availableFaces = new List<int>();
         for (int i = 0; i < cardFaces.Length; i++)
@@ -177,6 +177,7 @@ public class CardManager : MonoBehaviour
             Debug.Log("Match Found!");
             matchedPairs++;
             ScoreManager.instance.AddMatchPoints();
+            UIManager.Instance?.UpdatePairs(matchedPairs, totalPairs);
             firstCard.DisableCard();
             secondCard.DisableCard();
 
@@ -220,6 +221,10 @@ public class CardManager : MonoBehaviour
         SetupLayout();
         CreateCards();
         ShuffleCards();
+        UIManager.Instance?.UpdatePairs(0, totalPairs);
+        UIManager.Instance?.UpdateScore(ScoreManager.instance?.GetScore() ?? 0,
+                                        ScoreManager.instance?.GetCombo() ?? 0);
+        UIManager.Instance?.HideWinImmediate();
         StartCoroutine(PreviewCards(.5f));
     }
   
@@ -233,7 +238,8 @@ public class CardManager : MonoBehaviour
     void OnWin()
     {
         Debug.Log("🎉 You Win!");
-        StartCoroutine(RestartAfterDelay(2f));
+       // StartCoroutine(RestartAfterDelay(2f));
+       UIManager.Instance?.ShowWin(ScoreManager.instance?.GetScore() ?? 0);
         // TODO: show win UI, play sound, restart menu, etc.
     }
 }
