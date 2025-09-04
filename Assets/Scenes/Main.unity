@@ -182,7 +182,7 @@ MonoBehaviour:
   m_ChildAlignment: 4
   m_StartCorner: 0
   m_StartAxis: 0
-  m_CellSize: {x: 100, y: 100}
+  m_CellSize: {x: 200, y: 200}
   m_Spacing: {x: 15, y: 15}
   m_Constraint: 1
   m_ConstraintCount: 5
@@ -199,7 +199,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.028301895, g: 0.0006674974, b: 0.0006674974, a: 1}
+  m_Color: {r: 0.1792453, g: 0.1783998, b: 0.1783998, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -509,16 +509,26 @@ MonoBehaviour:
   cardPrefab: {fileID: 7853435576803236110, guid: 5fa66944ad670e14890618b7495e5021, type: 3}
   cardBack: {fileID: 21300000, guid: 9bda233a33c722a4d99003bc0c43b4b7, type: 3}
   cardFaces:
-  - {fileID: 21300000, guid: 22774d5311e9ef740ab8ea5a89379962, type: 3}
-  - {fileID: 21300000, guid: 992b20a8281df7749b34ecc0825123fd, type: 3}
-  - {fileID: 21300000, guid: 805537feca523c64ba10b469bd3f75ad, type: 3}
-  - {fileID: 21300000, guid: ab2d894dc6be4fa4aa4a6cc64ff067b7, type: 3}
-  - {fileID: 21300000, guid: 6a8a8d9397f4a5e4ea873a65b84a5c15, type: 3}
-  - {fileID: 21300000, guid: 5126426454d016c41aace55c2a52a1e1, type: 3}
-  - {fileID: 21300000, guid: 175f5dbfe1568f64a8b509e7ec2a1a57, type: 3}
-  - {fileID: 21300000, guid: ea90acd8d1a42a94687a2b82380806ea, type: 3}
-  - {fileID: 21300000, guid: 44c2f5d4c932bbc42b13574bc89d9665, type: 3}
-  - {fileID: 21300000, guid: c89165c91995207489989c57c7a7dd7a, type: 3}
+  - {fileID: 21300000, guid: b22fc298500559d4d8d9b8acd0845b07, type: 3}
+  - {fileID: 21300000, guid: 3ed0b6a3555b462448b27b1678ab645e, type: 3}
+  - {fileID: 21300000, guid: 1043dc58edd01e846a882f4584b8b651, type: 3}
+  - {fileID: 21300000, guid: 5fa005da9e78ac64b83e52616e304542, type: 3}
+  - {fileID: 21300000, guid: 05779a11041e64a489a534a2b70b0ced, type: 3}
+  - {fileID: 21300000, guid: e69c27bf340922147a0a55f3a30620dc, type: 3}
+  - {fileID: 21300000, guid: 8315377fa17858f43a54810441104bcf, type: 3}
+  - {fileID: 21300000, guid: f0a5a1e8790eaa642897651e8dd908b6, type: 3}
+  - {fileID: 21300000, guid: 6c48319aa654fc54c9563973d797fd38, type: 3}
+  - {fileID: 21300000, guid: b69626ca55552b643a3583222adc85fd, type: 3}
+  - {fileID: 21300000, guid: 81fb0ffc77f736a45b1d263215074a40, type: 3}
+  - {fileID: 21300000, guid: 6f27fa868f25c1241b12c398d9cf6315, type: 3}
+  - {fileID: 21300000, guid: ea014c3c6abf6e64fab0909767f87163, type: 3}
+  - {fileID: 21300000, guid: 22ecb3e241d5d314db9a1d04af754460, type: 3}
+  - {fileID: 21300000, guid: 67c0eb15b6a22bf4fbc7aa4c8b7bf04f, type: 3}
+  - {fileID: 21300000, guid: 49b82dd2a77ed2446a30aa22d2f93299, type: 3}
+  - {fileID: 21300000, guid: ce3c20032a366204abed198e6e75b37b, type: 3}
+  - {fileID: 21300000, guid: 038904ea8a33a014a92c22fd6da75359, type: 3}
+  - {fileID: 21300000, guid: 45df8051cbe4c0b4796e4f0b7d00afdd, type: 3}
+  - {fileID: 21300000, guid: 3b120d9753492d34d8c32403f7558224, type: 3}
   firstCard: {fileID: 0}
   secondCard: {fileID: 0}
   cardHolder: {fileID: 197041686}
