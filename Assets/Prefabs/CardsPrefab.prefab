@@ -93,6 +93,7 @@ MonoBehaviour:
   cardValue: 0
   cardManager: {fileID: 0}
   cardImage: {fileID: 7853435576803236108}
+  cardButton: {fileID: 5942813740513723929}
 --- !u!114 &5942813740513723929
 MonoBehaviour:
   m_ObjectHideFlags: 0

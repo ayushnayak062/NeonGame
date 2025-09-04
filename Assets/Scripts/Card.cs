@@ -11,11 +11,11 @@ public class Card : MonoBehaviour
 
     private bool isFaceUp = false;
     public Image cardImage;
-
+    public Button cardButton;
     private void Start()
     {
-        isFaceUp = false;
-        cardImage.sprite = cardManager.cardBack;
+        //isFaceUp = false;
+        //cardImage.sprite = cardManager.cardBack;
     }
 
     public void FlipCard()
@@ -68,6 +68,29 @@ public class Card : MonoBehaviour
             cardManager.CardFlipped(this);
             Debug.Log("Card flipped! Value: " + cardValue);
         }
+    }
+    public void ForceShow()
+    {
+        isFaceUp = true;
+        cardImage.sprite = cardManager.cardFaces[cardValue];
+    }
+
+    public void ForceHide()
+    {
+       /* isFaceUp = false;
+        cardImage.sprite = cardManager.cardBack;*/
+       StartCoroutine(FlipAnimation(false));
+    }
+    public void DisableCard()
+    {
+        cardButton.interactable = false;
+        if (cardImage != null)
+            cardImage.color = new Color(0.5f, 0.5f, 0.5f, 1f);// lock card
+    }
+
+    public void EnableCard()
+    {
+        cardButton.interactable = true; // optional if you ever reset a card
     }
 
 }

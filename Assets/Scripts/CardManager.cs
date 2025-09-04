@@ -37,6 +37,8 @@ public class CardManager : MonoBehaviour
         SetupLayout();
         CreateCards();
         ShuffleCards();
+        StartCoroutine(PreviewCards(.5f));
+
         Debug.Log(currentDifficulty);
     }
 
@@ -116,7 +118,26 @@ public class CardManager : MonoBehaviour
             newCard.cardValue = id;
             cards.Add(newCard);
         }
+       
     }
+
+    IEnumerator PreviewCards(float delay)
+    {
+        // Step 1: Show all cards
+        foreach (Card card in cards)
+            card.ForceShow();
+
+        yield return null; // allow Unity to render one frame
+
+        // Step 2: Wait for preview duration
+        yield return new WaitForSeconds(delay);
+
+        // Step 3: Now hide all cards
+        foreach (Card card in cards)
+            card.ForceHide();
+    }
+
+
 
 
 
@@ -152,9 +173,12 @@ public class CardManager : MonoBehaviour
     {
         if (firstCard.cardValue == secondCard.cardValue)
         {
+            
             Debug.Log("Match Found!");
             matchedPairs++;
             ScoreManager.instance.AddMatchPoints();
+            firstCard.DisableCard();
+            secondCard.DisableCard();
 
             // Check for win
             if (matchedPairs >= totalPairs)
@@ -196,7 +220,7 @@ public class CardManager : MonoBehaviour
         SetupLayout();
         CreateCards();
         ShuffleCards();
-        
+        StartCoroutine(PreviewCards(.5f));
     }
   
 

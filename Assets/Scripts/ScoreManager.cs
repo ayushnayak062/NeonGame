@@ -5,6 +5,7 @@ public class ScoreManager : MonoBehaviour
     public static ScoreManager instance;
 
     private int score;
+    private int comboStreak;
 
     [Header("Scoring Rules")]
     public int matchPoints = 10;
@@ -18,29 +19,38 @@ public class ScoreManager : MonoBehaviour
 
     private void Start()
     {
-        LoadScore();
+        ResetScore();
     }
 
     public void AddMatchPoints()
     {
-        score += matchPoints;
-        SaveScore();
-        Debug.Log("Score: " + score);
+        comboStreak++; // increase streak
+        int pointsToAdd = matchPoints * comboStreak; // multiplier effect
+        score += pointsToAdd;
+
+        // make sure score never goes below 0
+        score = Mathf.Max(score, 0);
+
+        Debug.Log($"Match! +{pointsToAdd} points (Combo x{comboStreak}) | Score: {score}");
         // later: notify UIManager
     }
 
     public void AddMismatchPenalty()
     {
+        comboStreak = 0; // reset streak
         score += mismatchPenalty;
-        SaveScore();
-        Debug.Log("Score: " + score);
+
+        // clamp to 0
+        score = Mathf.Max(score, 0);
+
+        Debug.Log($"Mismatch! {mismatchPenalty} points | Score: {score}");
         // later: notify UIManager
     }
 
     public void ResetScore()
     {
         score = 0;
-        SaveScore();
+        comboStreak = 0;
     }
 
     public int GetScore()
@@ -48,14 +58,8 @@ public class ScoreManager : MonoBehaviour
         return score;
     }
 
-    private void SaveScore()
+    public int GetCombo()
     {
-        PlayerPrefs.SetInt("playerScore", score);
-        PlayerPrefs.Save();
-    }
-
-    private void LoadScore()
-    {
-        score = PlayerPrefs.GetInt("playerScore", 0);
+        return comboStreak;
     }
 }
