@@ -37,6 +37,8 @@ public class CardManager : MonoBehaviour
         SetupLayout();
         CreateCards();
         ShuffleCards();
+        StartCoroutine(PreviewCards(.5f));
+
         Debug.Log(currentDifficulty);
     }
 
@@ -86,7 +88,7 @@ public class CardManager : MonoBehaviour
         int totalCards = rows * cols;
         totalPairs = totalCards / 2;
         matchedPairs = 0; // reset at start
-
+        UIManager.Instance?.UpdatePairs(matchedPairs, totalPairs);
         // pick random unique card IDs
         List<int> availableFaces = new List<int>();
         for (int i = 0; i < cardFaces.Length; i++)
@@ -116,7 +118,26 @@ public class CardManager : MonoBehaviour
             newCard.cardValue = id;
             cards.Add(newCard);
         }
+       
     }
+
+    IEnumerator PreviewCards(float delay)
+    {
+        // Step 1: Show all cards
+        foreach (Card card in cards)
+            card.ForceShow();
+
+        yield return null; // allow Unity to render one frame
+
+        // Step 2: Wait for preview duration
+        yield return new WaitForSeconds(delay);
+
+        // Step 3: Now hide all cards
+        foreach (Card card in cards)
+            card.ForceHide();
+    }
+
+
 
 
 
@@ -152,8 +173,13 @@ public class CardManager : MonoBehaviour
     {
         if (firstCard.cardValue == secondCard.cardValue)
         {
+            
             Debug.Log("Match Found!");
             matchedPairs++;
+            ScoreManager.instance.AddMatchPoints();
+            UIManager.Instance?.UpdatePairs(matchedPairs, totalPairs);
+            firstCard.DisableCard();
+            secondCard.DisableCard();
 
             // Check for win
             if (matchedPairs >= totalPairs)
@@ -167,6 +193,7 @@ public class CardManager : MonoBehaviour
         else
         {
             Debug.Log("No Match.");
+            ScoreManager.instance.AddMismatchPenalty();
             StartCoroutine(UnflipCards());
         }
     }
@@ -194,7 +221,11 @@ public class CardManager : MonoBehaviour
         SetupLayout();
         CreateCards();
         ShuffleCards();
-        
+        UIManager.Instance?.UpdatePairs(0, totalPairs);
+        UIManager.Instance?.UpdateScore(ScoreManager.instance?.GetScore() ?? 0,
+                                        ScoreManager.instance?.GetCombo() ?? 0);
+        UIManager.Instance?.HideWinImmediate();
+        StartCoroutine(PreviewCards(.5f));
     }
   
 
@@ -207,7 +238,8 @@ public class CardManager : MonoBehaviour
     void OnWin()
     {
         Debug.Log("🎉 You Win!");
-        StartCoroutine(RestartAfterDelay(2f));
+       // StartCoroutine(RestartAfterDelay(2f));
+       UIManager.Instance?.ShowWin(ScoreManager.instance?.GetScore() ?? 0);
         // TODO: show win UI, play sound, restart menu, etc.
     }
 }
