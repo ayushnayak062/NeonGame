@@ -112,5 +112,14 @@ public class UIManager : MonoBehaviour
         // TODO: AudioManager.Instance?.SetMuted(isMuted);
         // Optionally persist in SaveSystem
     }
+    public void OnSaveClicked()
+    {
+        SaveSystem.SaveGame();
+    }
+
+    public void OnLoadClicked()
+    {
+        SaveSystem.LoadGame();
+    }
 
 }
