@@ -154,6 +154,7 @@ public class CardManager : MonoBehaviour
         {
             Debug.Log("Match Found!");
             matchedPairs++;
+            ScoreManager.instance.AddMatchPoints();
 
             // Check for win
             if (matchedPairs >= totalPairs)
@@ -167,6 +168,7 @@ public class CardManager : MonoBehaviour
         else
         {
             Debug.Log("No Match.");
+            ScoreManager.instance.AddMismatchPenalty();
             StartCoroutine(UnflipCards());
         }
     }
