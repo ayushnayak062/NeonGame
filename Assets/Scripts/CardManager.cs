@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.Media;
 using UnityEngine;
@@ -22,6 +22,9 @@ public class CardManager : MonoBehaviour
     public Card firstCard, secondCard;
 
     private int rows, cols;
+
+    private int matchedPairs;
+    private int totalPairs;
 
     private void Awake()
     {
@@ -81,7 +84,8 @@ public class CardManager : MonoBehaviour
         cardValues = new List<int>();
 
         int totalCards = rows * cols;
-        int pairs = totalCards / 2;
+        totalPairs = totalCards / 2;
+        matchedPairs = 0; // reset at start
 
         // pick random unique card IDs
         List<int> availableFaces = new List<int>();
@@ -98,7 +102,7 @@ public class CardManager : MonoBehaviour
         }
 
         // take only the required number of pairs
-        for (int i = 0; i < pairs; i++)
+        for (int i = 0; i < totalPairs; i++)
         {
             cardValues.Add(availableFaces[i]);
             cardValues.Add(availableFaces[i]);
@@ -149,6 +153,14 @@ public class CardManager : MonoBehaviour
         if (firstCard.cardValue == secondCard.cardValue)
         {
             Debug.Log("Match Found!");
+            matchedPairs++;
+
+            // Check for win
+            if (matchedPairs >= totalPairs)
+            {
+                OnWin();
+            }
+
             firstCard = null;
             secondCard = null;
         }
@@ -168,7 +180,7 @@ public class CardManager : MonoBehaviour
         secondCard = null;
     }
 
-    void RestartGame()
+    public void RestartGame()
     {
         // Destroy old cards
         foreach (Transform child in cardHolder)
@@ -182,6 +194,21 @@ public class CardManager : MonoBehaviour
         SetupLayout();
         CreateCards();
         ShuffleCards();
+        
+    }
+  
+
+    IEnumerator RestartAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        RestartGame();
+    }
+
+    void OnWin()
+    {
+        Debug.Log("🎉 You Win!");
+        StartCoroutine(RestartAfterDelay(2f));
+        // TODO: show win UI, play sound, restart menu, etc.
     }
 }
 
